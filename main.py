@@ -57,6 +57,6 @@ gender = st.selectbox("성별을 선택하세요:", ["남성", "여성"])
 style = st.selectbox("스타일을 선택하세요:", ["스트릿", "캐주얼", "덴디", "포멀", "스포티"])
 color = st.selectbox("색감을 선택하세요:", ["블랙", "화이트", "네이비", "파스텔", "비비드"])
 season = st.selectbox("계절을 선택하세요:", ["봄", "여름", "가을", "겨울"])
-fit = st.selectbox("핏을 선택하세요:", ["슬림
+fit = st.selectbox("핏을 선택하세요:", ["슬림핏,오버핏,"]
 ::contentReference[oaicite:0]{index=0}
  
