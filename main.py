@@ -68,36 +68,4 @@ products = [
 # 필터링 로직 (조건 완화)
 filtered = [p for p in products if
             p["gender"] == gender and
-            p["style"] == style and
-            p["color"] == color and
-            p["season"] == season and
-            p["fit"] == fit and
-            p["category"] == category]
-
-if not filtered:
-    filtered = [p for p in products if
-                p["gender"] == gender and
-                p["style"] == style and
-                p["season"] == season and
-                p["fit"] == fit and
-                p["category"] == category]
-
-if not filtered:
-    filtered = [p for p in products if
-                p["gender"] == gender and
-                p["season"] == season and
-                p["fit"] == fit and
-                p["category"] == category]
-
-if not filtered:
-    filtered = [p for p in products if
-                p["gender"] == gender and
-                p["category"] == category]
-
-st.write(f"### 총 {len(filtered)}개 추천 상품")
-
-if filtered:
-    cols = st.columns(min(5, len(filtered)))
-    for i, product in enumerate(filtered):
-        with cols[i % 
-
+            p["style
