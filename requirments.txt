@@ -1,4 +1,27 @@
-plotly
-folium
-koreanize_matplotlib
-streamlit-folium
+import folium
+
+# 지도 중심 좌표 (대한민국 중심)
+map_center = [36.5, 127.8]
+m = folium.Map(location=map_center, zoom_start=7)
+
+# 장소 리스트: [이름, 위도, 경도]
+places = [
+    ["경복궁", 37.5796, 126.9770],
+    ["명동", 37.5636, 126.9820],
+    ["남산타워", 37.5512, 126.9882],
+    ["DDP", 37.5665, 127.0095],
+    ["해운대", 35.1587, 129.1604],
+    ["광안리", 35.1532, 129.1186],
+    ["성산일출봉", 33.4589, 126.9423],
+    ["한라산", 33.3625, 126.5335],
+    ["불국사", 35.7900, 129.3317],
+    ["전주한옥마을", 35.8151, 127.1522],
+]
+
+# 마커 추가
+for name, lat, lng in places:
+    folium.Marker(location=[lat, lng], popup=name, tooltip=name).add_to(m)
+
+# 지도 출력
+m.save("korea_top10_places.html")
+
