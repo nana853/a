@@ -2,7 +2,7 @@ import streamlit as st
 
 st.title("👗 스타일 & 색감 기반 옷 추천 (조건 완화 포함)")
 
-# 사용자 선택 UI
+# 사용자 입력 받기
 gender = st.selectbox("성별 선택", ["남성", "여성"])
 style = st.selectbox("스타일 선택", ["스트릿", "캐주얼", "덴디", "포멀", "스포티", "빈티지", "미니멀"])
 color = st.selectbox("색감 선택", ["블랙", "화이트", "네이비", "파스텔", "비비드", "올리브", "베이지", "버건디", "그레이", "브라운", "카멜", "카키"])
@@ -12,11 +12,11 @@ category = st.selectbox("의류 종류 선택", ["상의", "하의", "아우터"
 
 st.markdown("---")
 
-# 상품 데이터 리스트
+# 제품 데이터 (남성/여성 구분, 스타일, 색감, 계절, 핏, 카테고리 포함)
 products = [
-    # 남성
+    # 남성 상품 5개 이상
     {"name": "베이직 블랙 티셔츠", "gender": "남성", "style": "캐주얼", "color": "블랙", "season": "여름", "fit": "슬림핏", "category": "상의",
-     "desc": "기본 중의 기본, 어디에나 잘 어울리는 블랙 티셔츠입니다.",
+     "desc": "기본 중의 기본, 어디에나 잘 어울리는 블랙 티셔츠.",
      "image": "https://image.musinsa.com/mfile_s01/_musinsa2023/20/1234567890_1.jpg", "link": "https://www.musinsa.com/app/goods/123456"},
     {"name": "네이비 스트릿 후드티", "gender": "남성", "style": "스트릿", "color": "네이비", "season": "가을", "fit": "오버핏", "category": "상의",
      "desc": "편안하면서도 스타일리시한 네이비 후드티.",
@@ -34,7 +34,7 @@ products = [
      "desc": "포근한 느낌의 그레이 니트 비니.",
      "image": "https://musinsa.com/img/gray_beanie_1.jpg", "link": "https://musinsa.com/app/goods/789101"},
 
-    # 여성
+    # 여성 상품 5개 이상
     {"name": "핑크 파스텔 블라우스", "gender": "여성", "style": "캐주얼", "color": "파스텔", "season": "봄", "fit": "슬림핏", "category": "상의",
      "desc": "봄 느낌 물씬 나는 사랑스러운 파스텔 블라우스.",
      "image": "https://ably.co.kr/img/123456_pink_blouse.jpg", "link": "https://ably.co.kr/item/123456"},
@@ -64,6 +64,39 @@ products = [
      "image": "https://zigzag.kr/img/brown_vintage_cardigan.jpg", "link": "https://zigzag.kr/product/98765"},
     {"name": "카멜 와이드 팬츠", "gender": "여성", "style": "미니멀", "color": "카멜", "season": "봄", "fit": "레귤러핏", "category": "하의",
      "desc": "심플한 카멜 색상의 와이드 팬츠.",
-     "image": "https://ably.co.kr/img/camel_widepants.jpg", "link": "https://ably
+     "image": "https://ably.co.kr/img/camel_widepants.jpg", "link": "https://ably.co.kr/item/98765"},
+]
 
-     
+# 조건 완화 필터: 성별만 무조건 맞고 나머지는 일부만 맞으면 추천하도록
+def match_condition(product):
+    if product["gender"] != gender:
+        return False
+    
+    score = 0
+    # 조건 점수
+    if product["style"] == style:
+        score += 1
+    if product["color"] == color:
+        score += 1
+    if product["season"] == season:
+        score += 1
+    if product["fit"] == fit:
+        score += 1
+    if product["category"] == category:
+        score += 1
+    
+    # 점수 2 이상이면 추천
+    return score >= 2
+
+filtered_products = [p for p in products if match_condition(p)]
+
+if filtered_products:
+    st.write(f"총 {len(filtered_products)}개 추천 상품이 있습니다:")
+    for p in filtered_products:
+        st.subheader(p["name"])
+        st.image(p["image"], width=300)
+        st.write(p["desc"])
+        st.markdown(f"[상품 바로가기]({p['link']})")
+        st.markdown("---")
+else:
+    st.write("조건에 맞는 상품이 없습니다. 조건을 변경해보세요.")
