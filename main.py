@@ -1,18 +1,18 @@
 import streamlit as st
 
-st.title("🧥 무신사 스타일 추천기")
+st.title("🧥 무신사 스타일 추천기 (최소 3개 보장)")
 
-# 사용자 입력 받기
-gender = st.selectbox("성별을 선택하세요", ["남성", "여성"])
-style = st.selectbox("스타일을 선택하세요", ["스트릿", "캐주얼", "덴디", "미니멀", "포멀"])
-color = st.selectbox("색감을 선택하세요", ["블랙", "화이트", "그레이", "네이비", "베이지", "카멜", "카키", "버건디"])
-season = st.selectbox("계절을 선택하세요", ["봄", "여름", "가을", "겨울"])
-fit = st.selectbox("핏을 선택하세요", ["슬림핏", "레귤러핏", "오버핏", "루즈핏"])
-category = st.selectbox("의류 종류를 선택하세요", ["상의", "하의", "아우터", "신발", "액세서리", "가방"])
+# 사용자 입력
+gender = st.selectbox("성별 선택", ["남성", "여성"])
+style = st.selectbox("스타일 선택", ["스트릿", "캐주얼", "덴디", "미니멀", "포멀"])
+color = st.selectbox("색감 선택", ["블랙", "화이트", "그레이", "네이비", "베이지", "카멜", "카키", "버건디"])
+season = st.selectbox("계절 선택", ["봄", "여름", "가을", "겨울"])
+fit = st.selectbox("핏 선택", ["슬림핏", "레귤러핏", "오버핏", "루즈핏"])
+category = st.selectbox("의류 종류 선택", ["상의", "하의", "아우터", "신발", "액세서리", "가방"])
 
 st.markdown("---")
 
-# 무신사 상품 데이터
+# 상품 데이터 (무신사)
 products = [
     {"name": "무신사 블랙 티셔츠", "gender": "남성", "style": "미니멀", "color": "블랙", "season": "여름", "fit": "슬림핏", "category": "상의",
      "desc": "기본 중의 기본 블랙 반팔 티셔츠. 무신사 스탠다드 제품.",
@@ -47,28 +47,34 @@ products = [
      "image": "https://image.musinsa.com/mfile_s01/2023/07/minibag.jpg", "link": "https://www.musinsa.com/app/goods/66666"},
 ]
 
-# 필터링 함수
-def is_match(p):
-    return (
-        p["gender"] == gender and
-        p["style"] == style and
-        p["color"] == color and
-        p["season"] == season and
-        p["fit"] == fit and
-        p["category"] == category
-    )
+# 점수 기반 필터링
+def get_score(p):
+    score = 0
+    if p["style"] == style:
+        score += 1
+    if p["color"] == color:
+        score += 1
+    if p["season"] == season:
+        score += 1
+    if p["fit"] == fit:
+        score += 1
+    if p["category"] == category:
+        score += 1
+    return score
 
-# 필터 적용
-matched = [p for p in products if is_match(p)]
+# 성별 우선 필터
+filtered = [p for p in products if p["gender"] == gender]
+# 점수 계산 후 정렬
+scored = sorted(filtered, key=lambda x: get_score(x), reverse=True)
+# 상위 3개 이상 추출
+top_matches = scored[:max(3, len(scored))]
 
 # 결과 출력
-if matched:
-    st.success(f"🔎 조건에 맞는 무신사 상품 {len(matched)}개 찾았습니다!")
-    for p in matched:
-        st.image(p["image"], width=300)
-        st.subheader(p["name"])
-        st.write(p["desc"])
-        st.markdown(f"[👉 무신사 상품 보러가기]({p['link']})")
-        st.markdown("---")
-else:
-    st.warning("😥 조건에 맞는 무신사 상품이 없습니다. 조건을 바꿔보세요.")
+st.success(f"🎯 추천된 무신사 상품 {min(3, len(top_matches))}개 이상:")
+for p in top_matches[:5]:  # 최대 5개까지 보여줌
+    st.image(p["image"], width=300)
+    st.subheader(p["name"])
+    st.write(p["desc"])
+    st.markdown(f"[👉 무신사 상품 보러가기]({p['link']})")
+    st.markdown("---")
+
